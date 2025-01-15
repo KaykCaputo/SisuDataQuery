@@ -13,7 +13,7 @@ class SisuDataQuery
     public static Course course;
     public static CourseWeights courseWeights;
     public static MinGrades minGrades;
-    const int columnWidth = 30;
+    const int columnWidth = 25;
 
     public class Institution
     {
@@ -102,8 +102,8 @@ class SisuDataQuery
         public string? disMin { get; set; }
         public override string ToString()
         {
-            return $"| {"Nota minima CN",-columnWidth / 2} | {"Nota minima CH",-columnWidth / 2} | {"Nota minima Lng",-columnWidth / 2} | {"Nota minima Mt",-columnWidth / 2} | {"Nota minima Dis",-columnWidth / 2} |\n" +
-            $"| {natSciMin,-columnWidth / 2} | {hmnSciMin,-columnWidth / 2} | {langSciMin,-columnWidth / 2} | {mtmMin,-columnWidth / 2} | {disMin,-columnWidth / 2} |\n";
+            return $"| {"Nota minima CN",-columnWidth / 2}|{"Nota minima CH",-columnWidth / 2}|{"Nota minima Lng",-columnWidth / 2}|{"Nota minima Mt",-columnWidth / 2}|{"Nota minima Dis",-columnWidth / 2}|\n" +
+            $"| {natSciMin,-columnWidth / 2}  | {hmnSciMin,-columnWidth / 2}  | {langSciMin,-columnWidth / 2} | {mtmMin,-columnWidth / 2} | {disMin,-columnWidth / 2}  |\n";
         }
     }
 
