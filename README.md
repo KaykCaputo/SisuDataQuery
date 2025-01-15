@@ -10,4 +10,4 @@ Query the sisu api initially for institutions by state, then for courses by inst
 
 ## How it works:
 
-After installing the dependencies, simply run the code and enter the requested information when requested, firstly the institution's acronym and then the course code
+After installing the dependencies, simply run the code and enter the requested information when requested, firstly the institution's acronym and then the course code.
