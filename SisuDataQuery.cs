@@ -12,6 +12,7 @@ class SisuDataQuery
     public static List<Course> listIesCourses = new List<Course>();
     public static Course course;
     public static CourseWeights courseWeights;
+    public static MinGrades minGrades;
     const int columnWidth = 30;
 
     public class Institution
@@ -79,8 +80,30 @@ class SisuDataQuery
         public string? disWeight { get; set; }
         public override string ToString()
         {
-            return $"| {"Peso CN",-columnWidth / 2} | {"Peso CH",-columnWidth / 2} | {"Peso Ling",-columnWidth / 2} | {"Peso Mtm",-columnWidth / 2} | {"Peso Reda",-columnWidth / 2} |\n" +
+            return $"| {"Peso CN",-columnWidth / 2} | {"Peso CH",-columnWidth / 2} | {"Peso Ling",-columnWidth / 2} | {"Peso Mtm",-columnWidth / 2} | {"Peso Dis",-columnWidth / 2} |\n" +
             $"| {natSciWeight,-columnWidth / 2} | {hmnSciWeight,-columnWidth / 2} | {langSciWeight,-columnWidth / 2} | {mtmWeight,-columnWidth / 2} | {disWeight,-columnWidth / 2} |\n";
+        }
+    }
+    public class MinGrades
+    {
+        public MinGrades(string cnMin, string chMin, string lngMin, string mtmMin, string redMin)
+        {
+            this.natSciMin = cnMin;
+            this.hmnSciMin = chMin;
+            this.langSciMin = lngMin;
+            this.mtmMin = mtmMin;
+            this.disMin = redMin;
+        }
+
+        public string? natSciMin { get; set; }
+        public string? hmnSciMin { get; set; }
+        public string? langSciMin { get; set; }
+        public string? mtmMin { get; set; }
+        public string? disMin { get; set; }
+        public override string ToString()
+        {
+            return $"| {"Nota minima CN",-columnWidth / 2} | {"Nota minima CH",-columnWidth / 2} | {"Nota minima Lng",-columnWidth / 2} | {"Nota minima Mt",-columnWidth / 2} | {"Nota minima Dis",-columnWidth / 2} |\n" +
+            $"| {natSciMin,-columnWidth / 2} | {hmnSciMin,-columnWidth / 2} | {langSciMin,-columnWidth / 2} | {mtmMin,-columnWidth / 2} | {disMin,-columnWidth / 2} |\n";
         }
     }
 
@@ -121,6 +144,7 @@ class SisuDataQuery
             }
         }
         getCourseWeights(driver, course.offerCode);
+        getMinGrades(driver, course.offerCode);
 
 
 
@@ -253,6 +277,40 @@ class SisuDataQuery
 
                         courseWeights = new CourseWeights(nuPesoCn, nuPesoCh, nuPesoL, nuPesoM, nuPesoR);
                         Console.WriteLine(courseWeights);
+
+                    }
+                }
+            }
+        }
+    }
+    public static void getMinGrades(IWebDriver driver, string offerCode)
+    {
+        driver.Navigate().GoToUrl($"https://sisu-api.sisu.mec.gov.br/api/v1/oferta/{offerCode}/modalidades");
+        System.Threading.Thread.Sleep(5000);
+        var htmlContent = driver.PageSource;
+        var htmlDocument = new HtmlDocument();
+        htmlDocument.LoadHtml(htmlContent);
+        var preNode = htmlDocument.DocumentNode.SelectSingleNode("//pre");
+        if (preNode != null)
+        {
+            var jsonContent = preNode.InnerText;
+            var cleanedJsonContent = CleanJson(jsonContent);
+            if (!string.IsNullOrEmpty(cleanedJsonContent))
+            {
+                var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(cleanedJsonContent);
+                if (data.ContainsKey("oferta"))
+                {
+                    var oferta = data["oferta"] as JObject;
+                    if (oferta != null)
+                    {
+                        var nMinCn = oferta["nu_nmin_cn"]?.ToString();
+                        var nMinCh = oferta["nu_nmin_ch"]?.ToString();
+                        var nMinL = oferta["nu_nmin_l"]?.ToString();
+                        var nMinM = oferta["nu_nmin_m"]?.ToString();
+                        var nMinR = oferta["nu_nmin_r"]?.ToString();
+
+                        minGrades = new MinGrades(nMinCn, nMinCh, nMinL, nMinM, nMinR);
+                        Console.WriteLine(minGrades);
 
                     }
                 }
