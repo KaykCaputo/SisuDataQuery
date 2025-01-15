@@ -2,9 +2,6 @@
 using OpenQA.Selenium.Chrome;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 #pragma warning disable
