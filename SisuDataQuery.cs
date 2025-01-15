@@ -109,6 +109,7 @@ class SisuDataQuery
 
     static void Main(string[] args)
     {
+        Console.WriteLine("SISU DATA QUERY");
         var options = new ChromeOptions();
         options.AddArgument("--headless");
         IWebDriver driver = new ChromeDriver(options);
