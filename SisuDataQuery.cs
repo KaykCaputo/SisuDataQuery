@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 
 
-class Program
+class SisuDataQuery
 {
     public static List<Institution> listInstitutions = new List<Institution>();
     public static List<Course> listIesCourses = new List<Course>();
