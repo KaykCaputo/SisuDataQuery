@@ -70,7 +70,7 @@ After selecting a course, the application will fetch and display the course weig
 
   - Newtonsoft.Json: Used for handling JSON data from the SISU API.
 
-### Suggestions and Contributions**:  
+### Suggestions and Contributions:  
   
 If you have any suggestions for new features or improvements, feel free to open an issue or submit a pull request!
 
