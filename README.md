@@ -69,46 +69,45 @@ Here is a sample of what a session looks like in the console:
 $ dotnet run
 =============== SISU DATA QUERY ===============
 
-Choose an option:
-1. Search for an institution
-2. Exit
-Option: 1
+Escolha uma opção:
+1. Procurar por instituição
+2. Sair
+Opção: 1
 
-**ENTER THE ACRONYM OF THE DESIRED INSTITUTION:
+**INSIRA A SIGLA DA INSTITUIÇÃO DESEJADA:
 UFRJ
 --------------------------------------------------------------------------------------------------------
-| Code       | Acronym         | Name                                | Municipality              |
+| Código     | Sigla           | Nome                                | Município                   |
 --------------------------------------------------------------------------------------------------------
-| 335        | UFRJ            | UNIVERSIDADE FEDERAL DO RIO DE JANEIRO | Rio de Janeiro            |
+| 335        | UFRJ            | UNIVERSIDADE FEDERAL DO RIO DE JANEIRO | Rio de Janeiro              |
 --------------------------------------------------------------------------------------------------------
 
-Searching for courses from the institution...
+Procurando cursos da instituição...
 
-------------------------------------------------------------------------------------------------------------------------------------------------
-| Code       | Name                                | Degree               | Shift           | Campus                         | Municipality              |
-------------------------------------------------------------------------------------------------------------------------------------------------
-| 1190479    | ENGENHARIA DE COMPUTAÇÃO E INFORMAÇÃO | Bacharelado          | Integral        | Campus Cidade Universitária    | Rio de Janeiro            |
-| 1190481    | CIÊNCIA DA COMPUTAÇÃO                 | Bacharelado          | Integral        | Campus Cidade Universitária    | Rio de Janeiro            |
-... (other courses) ...
-------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+| Código     | Nome                                | Grau                 | Turno           | Campus                         | Município                   |
+----------------------------------------------------------------------------------------------------------------------------------------------------
+| 1190481    | CIÊNCIA DA COMPUTAÇÃO                 | Bacharelado          | Integral        | Campus Cidade Universitária    | Rio de Janeiro              |
+... (outros cursos) ...
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-**ENTER THE COURSE CODE:
+**INSIRA O CÓDIGO DO CURSO:
 1190481
 
-------------------------------------------------------------------------------------------------------------------------------------------------
-| Code       | Name                                | Degree               | Shift           | Campus                         | Municipality              |
-------------------------------------------------------------------------------------------------------------------------------------------------
-| 1190481    | CIÊNCIA DA COMPUTAÇÃO                 | Bacharelado          | Integral        | Campus Cidade Universitária    | Rio de Janeiro            |
-------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+| Código     | Nome                                | Grau                 | Turno           | Campus                         | Município                   |
+----------------------------------------------------------------------------------------------------------------------------------------------------
+| 1190481    | CIÊNCIA DA COMPUTAÇÃO                 | Bacharelado          | Integral        | Campus Cidade Universitária    | Rio de Janeiro              |
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-Collecting course information...
+Recolhendo informações do curso...
 
-Weights:
+Pesos:
 | Peso CN         | Peso CH         | Peso Linguagens | Peso Matemática | Peso Redação    |
 -------------------------------------------------------------------------------------------
 | 2.00            | 1.00            | 1.50            | 4.00            | 1.50            |
 
-Minimum Grades:
+Notas Mínimas:
 | Nota Mínima CN      | Nota Mínima CH      | Nota Mínima Ling    | Nota Mínima Mat     | Nota Mínima Red     |
 -----------------------------------------------------------------------------------------------------------------
 | 400.00              | 400.00              | 400.00              | 400.00              | 400.00              |
