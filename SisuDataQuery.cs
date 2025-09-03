@@ -13,7 +13,7 @@ class SisuDataQuery
     public static Course course;
     public static CourseWeights courseWeights;
     public static MinGrades minGrades;
-    const int columnWidth = 25;
+    const int columnWidth = 35;
 
     public class Institution
     {
@@ -32,7 +32,7 @@ class SisuDataQuery
 
         public override string ToString()
         {
-            return $"| {institutionCode,-columnWidth} | {institutionSg,-columnWidth} | {institutionName,-columnWidth} | {institutionCity,-columnWidth} |\n";
+            return $"| {institutionCode,-10} | {institutionSg,-15} | {institutionName,-columnWidth} | {institutionCity,-25} |";
         }
     }
     public class Course
@@ -46,7 +46,6 @@ class SisuDataQuery
             this.courseShift = no_turno;
             this.campusName = no_campus;
             this.campusCity = no_municipio_campus;
-
         }
 
         public string? offerCode { get; set; }
@@ -59,7 +58,7 @@ class SisuDataQuery
 
         public override string ToString()
         {
-            return $"| {courseCode,-columnWidth} | {courseName,-columnWidth} | {courseDegree,-columnWidth} | {courseShift,-columnWidth} | {campusName,-columnWidth} | {campusCity,-columnWidth} |\n";
+            return $"| {courseCode,-10} | {courseName,-columnWidth} | {courseDegree,-20} | {courseShift,-15} | {campusName,-30} | {campusCity,-25} |";
         }
     }
     public class CourseWeights
@@ -80,8 +79,9 @@ class SisuDataQuery
         public string? disWeight { get; set; }
         public override string ToString()
         {
-            return $"| {"Peso CN",-columnWidth / 2} | {"Peso CH",-columnWidth / 2} | {"Peso Ling",-columnWidth / 2} | {"Peso Mtm",-columnWidth / 2} | {"Peso Dis",-columnWidth / 2} |\n" +
-            $"| {natSciWeight,-columnWidth / 2} | {hmnSciWeight,-columnWidth / 2} | {langSciWeight,-columnWidth / 2} | {mtmWeight,-columnWidth / 2} | {disWeight,-columnWidth / 2} |\n";
+            string header = $"| {"Peso CN",-15} | {"Peso CH",-15} | {"Peso Linguagens",-15} | {"Peso Matemática",-15} | {"Peso Redação",-15} |\n";
+            string values = $"| {natSciWeight,-15} | {hmnSciWeight,-15} | {langSciWeight,-15} | {mtmWeight,-15} | {disWeight,-15} |";
+            return header + new string('-', header.Length - 1) + "\n" + values;
         }
     }
     public class MinGrades
@@ -102,59 +102,111 @@ class SisuDataQuery
         public string? disMin { get; set; }
         public override string ToString()
         {
-            return $"| {"Nota minima CN",-columnWidth / 2}|{"Nota minima CH",-columnWidth / 2}|{"Nota minima Lng",-columnWidth / 2}|{"Nota minima Mt",-columnWidth / 2}|{"Nota minima Dis",-columnWidth / 2}|\n" +
-            $"| {natSciMin,-columnWidth / 2}  | {hmnSciMin,-columnWidth / 2}  | {langSciMin,-columnWidth / 2} | {mtmMin,-columnWidth / 2} | {disMin,-columnWidth / 2}  |\n";
+            string header = $"| {"Nota Mínima CN",-20} | {"Nota Mínima CH",-20} | {"Nota Mínima Ling",-20} | {"Nota Mínima Mat",-20} | {"Nota Mínima Red",-20} |\n";
+            string values = $"| {natSciMin,-20} | {hmnSciMin,-20} | {langSciMin,-20} | {mtmMin,-20} | {disMin,-20} |";
+            return header + new string('-', header.Length - 1) + "\n" + values;
         }
     }
 
     static void Main(string[] args)
     {
-        Console.WriteLine("SISU DATA QUERY");
+        Console.WriteLine("=============== SISU DATA QUERY ===============\n");
         var options = new ChromeOptions();
         options.AddArgument("--headless");
         IWebDriver driver = new ChromeDriver(options);
         GetIes(driver);
-        Console.WriteLine("**INSIRA A SIGLA DA INSTITUIÇÃO DESEJADA:");
+
+        bool exit = false;
+        while (!exit)
+        {
+            Console.WriteLine("\nEscolha uma opção:");
+            Console.WriteLine("1. Procurar por instituição");
+            Console.WriteLine("2. Sair");
+            Console.Write("Opção: ");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    SearchInstitution(driver);
+                    break;
+                case "2":
+                    exit = true;
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida. Tente novamente.");
+                    break;
+            }
+        }
+
+        driver.Quit();
+    }
+
+    public static void SearchInstitution(IWebDriver driver)
+    {
+        Console.WriteLine("\n**INSIRA A SIGLA DA INSTITUIÇÃO DESEJADA:");
         string siglaIes = Console.ReadLine();
+        Institution selectedInstitution = null;
 
         foreach (Institution i in listInstitutions)
         {
             if (siglaIes.ToUpper() == i.institutionSg)
             {
-
-                Console.WriteLine(new string('-', columnWidth * 4 + 20));
-                Console.WriteLine($"| {"Código",-columnWidth} | {"Sigla",-columnWidth} | {"Nome",-columnWidth} | {"Municipio",-columnWidth} |");
-                Console.WriteLine(new string('-', columnWidth * 4 + 20));
+                selectedInstitution = i;
+                Console.WriteLine(new string('-', 120));
+                Console.WriteLine($"| {"Código",-10} | {"Sigla",-15} | {"Nome",-columnWidth} | {"Município",-25} |");
+                Console.WriteLine(new string('-', 120));
                 Console.WriteLine(i);
-                Console.WriteLine("Procurando cursos da instituição...\n...");
+                Console.WriteLine(new string('-', 120));
+                Console.WriteLine("\nProcurando cursos da instituição...\n");
                 getCourses(driver, i.institutionCode);
+                break;
             }
         }
-        Console.WriteLine("**INSIRA O CÓDIGO DO CURSO:");
+
+        if (selectedInstitution != null)
+        {
+            SearchCourse(driver);
+        }
+        else
+        {
+            Console.WriteLine("Instituição não encontrada.");
+        }
+    }
+
+    public static void SearchCourse(IWebDriver driver)
+    {
+        Console.WriteLine("\n**INSIRA O CÓDIGO DO CURSO:");
         string courseCode = Console.ReadLine();
+        course = null;
+
         foreach (Course c in listIesCourses)
         {
             if (courseCode == c.courseCode)
             {
                 course = c;
-                Console.WriteLine(new string('-', columnWidth * 6 + 20));
-                Console.WriteLine($"| {"Código",-columnWidth} | {"Nome",-columnWidth} | {"Tipo",-columnWidth} | {"Turno",-columnWidth} | {"Campus",-columnWidth} | {"Municipio",-columnWidth} |");
-                Console.WriteLine(new string('-', columnWidth * 6 + 20));
+                Console.WriteLine(new string('-', 160));
+                Console.WriteLine($"| {"Código",-10} | {"Nome",-columnWidth} | {"Grau",-20} | {"Turno",-15} | {"Campus",-30} | {"Município",-25} |");
+                Console.WriteLine(new string('-', 160));
                 Console.WriteLine(c);
-                Console.WriteLine("Recolhendo informações...\n...");
+                Console.WriteLine(new string('-', 160));
+                Console.WriteLine("\nRecolhendo informações do curso...\n");
+                getCourseWeights(driver, course.offerCode);
+                getMinGrades(driver, course.offerCode);
+                break;
             }
         }
-        getCourseWeights(driver, course.offerCode);
-        getMinGrades(driver, course.offerCode);
 
-
-
-        driver.Quit();
+        if (course == null)
+        {
+            Console.WriteLine("Curso não encontrado.");
+        }
     }
+
     public static void GetIes(IWebDriver driver)
     {
         driver.Navigate().GoToUrl("https://sisu-api.sisu.mec.gov.br/api/v1/oferta/instituicoes/uf");
-        System.Threading.Thread.Sleep(5000);
+        System.Threading.Thread.Sleep(2000);
         var htmlContent = driver.PageSource;
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
@@ -196,8 +248,9 @@ class SisuDataQuery
     }
     public static void getCourses(IWebDriver driver, string iesCode)
     {
+        listIesCourses.Clear();
         driver.Navigate().GoToUrl($"https://sisu-api.sisu.mec.gov.br/api/v1/oferta/instituicao/{iesCode}");
-        System.Threading.Thread.Sleep(5000);
+        System.Threading.Thread.Sleep(2000);
         var htmlContent = driver.PageSource;
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
@@ -206,14 +259,16 @@ class SisuDataQuery
         if (preNode != null)
         {
             var jsonContent = preNode.InnerText;
-
             var cleanedJsonContent = CleanJson(jsonContent);
 
             if (!string.IsNullOrEmpty(cleanedJsonContent))
             {
                 var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(cleanedJsonContent);
-
                 data.Remove("search_rule");
+
+                Console.WriteLine(new string('-', 160));
+                Console.WriteLine($"| {"Código",-10} | {"Nome",-columnWidth} | {"Grau",-20} | {"Turno",-15} | {"Campus",-30} | {"Município",-25} |");
+                Console.WriteLine(new string('-', 160));
 
                 for (int i = 0; i < data.Count; i++)
                 {
@@ -238,22 +293,19 @@ class SisuDataQuery
                             {
                                 Course _course = new Course(coOferta, coCurso, noCurso, noGrau, noTurno, noCampus, noMunicipioCampus);
                                 listIesCourses.Add(_course);
-                                Console.WriteLine(new string('-', columnWidth * 6 + 20));
-                                Console.WriteLine($"| {"Código",-columnWidth} | {"Nome",-columnWidth} | {"Tipo",-columnWidth} | {"Turno",-columnWidth} | {"Campus",-columnWidth} | {"Municipio",-columnWidth} |");
-                                Console.WriteLine(new string('-', columnWidth * 6 + 20));
                                 Console.WriteLine(_course);
                             }
-
                         }
                     }
                 }
+                Console.WriteLine(new string('-', 160));
             }
         }
     }
     public static void getCourseWeights(IWebDriver driver, string offerCode)
     {
         driver.Navigate().GoToUrl($"https://sisu-api.sisu.mec.gov.br/api/v1/oferta/{offerCode}/modalidades");
-        System.Threading.Thread.Sleep(5000);
+        System.Threading.Thread.Sleep(2000);
         var htmlContent = driver.PageSource;
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
@@ -277,6 +329,7 @@ class SisuDataQuery
                         var nuPesoR = oferta["nu_peso_r"]?.ToString();
 
                         courseWeights = new CourseWeights(nuPesoCn, nuPesoCh, nuPesoL, nuPesoM, nuPesoR);
+                        Console.WriteLine("Pesos:");
                         Console.WriteLine(courseWeights);
 
                     }
@@ -287,7 +340,7 @@ class SisuDataQuery
     public static void getMinGrades(IWebDriver driver, string offerCode)
     {
         driver.Navigate().GoToUrl($"https://sisu-api.sisu.mec.gov.br/api/v1/oferta/{offerCode}/modalidades");
-        System.Threading.Thread.Sleep(5000);
+        System.Threading.Thread.Sleep(2000);
         var htmlContent = driver.PageSource;
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(htmlContent);
@@ -311,8 +364,8 @@ class SisuDataQuery
                         var nMinR = oferta["nu_nmin_r"]?.ToString();
 
                         minGrades = new MinGrades(nMinCn, nMinCh, nMinL, nMinM, nMinR);
+                        Console.WriteLine("\nNotas Mínimas:");
                         Console.WriteLine(minGrades);
-
                     }
                 }
             }
@@ -328,6 +381,4 @@ class SisuDataQuery
         }
         return trimmedJson;
     }
-
 }
-
