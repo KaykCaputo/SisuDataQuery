@@ -150,7 +150,7 @@ class SisuDataQuery
 
         foreach (Institution i in listInstitutions)
         {
-            if (siglaIes.ToUpper() == i.institutionSg)
+            if (siglaIes.ToUpper().Trim() == i.institutionSg)
             {
                 selectedInstitution = i;
                 Console.WriteLine(new string('-', 120));
@@ -182,7 +182,7 @@ class SisuDataQuery
 
         foreach (Course c in listIesCourses)
         {
-            if (courseCode == c.courseCode)
+            if (courseCode.Trim() == c.courseCode)
             {
                 course = c;
                 Console.WriteLine(new string('-', 160));
